@@ -5,7 +5,7 @@ public class Character {
 
     float maxSpeed = 2;
     float speed = 0;
-    float acceleration = 0.3f;
+    float acceleration = 0.1f;
     // boolean moveLeft, moveRight = false;
 
     String playerState = "idle";
@@ -32,24 +32,27 @@ public class Character {
                     speed += acceleration;
                     this.xPos -= speed;
                 }
+                fill(7, 122, 125);
+                rect(this.xPos - 5, this.yPos + 10, 10, 40);
+                ellipse(this.xPos, this.yPos, 30, 30);
                 speed = 0;
                 break;
             case "moveRight":
                 while (speed < maxSpeed) {
                     speed += acceleration;
                     this.xPos += speed;
-                    
-                    fill(7, 122, 125);
-                    rect(this.xPos - 5, this.yPos + 10, 10, 40);
-                    ellipse(this.xPos, this.yPos, 30, 30);
-                    rotate(180);
                 }
+                fill(7, 122, 125);
+                rect(this.xPos - 5, this.yPos + 10, 10, 40);
+                ellipse(this.xPos, this.yPos, 30, 30);
                 speed = 0;
                 break;
             case "jump":  
                 this.yPos -= 10;
                 this.yPos = applyGravity(this.yPos);
-                
+                fill(7, 122, 125);
+                rect(this.xPos - 5, this.yPos + 10, 10, 40);
+                ellipse(this.xPos, this.yPos, 30, 30);
                 break;
 
             case "idle":
