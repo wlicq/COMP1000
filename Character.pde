@@ -15,10 +15,11 @@ public class Character {
   String playerState = "idle";
 
 
-  public Character(float x, float y, float floor) {
+  public Character(float x, float y, float floor, float setJumpHeight) {
     this.xPos = x;
     this.yPos = y;
     this.floorPos = floor;
+    this.jumpHeight = setJumpHeight;
   }
 
   void update(boolean moveLeft, boolean moveRight, boolean jump) {
@@ -33,6 +34,7 @@ public class Character {
     switch(playerState) {
     case "moveLeft":
       while (speed < maxSpeed) {
+        if (this.xPos < 0) this.xPos = 0;
         speed += acceleration;
         this.xPos -= speed;
       }
@@ -41,8 +43,10 @@ public class Character {
       break;
     case "moveRight":
       while (speed < maxSpeed) {
+        if (this.xPos > width) this.xPos = width;
         speed += acceleration;
         this.xPos += speed;
+        
       }
       displayPlayer();
       speed = 0;
@@ -59,14 +63,44 @@ public class Character {
   }
   protected void displayPlayer() {
 
-    fill(7, 122, 125);
-    rect(this.xPos - 10, this.yPos + 10, 20, 30);
-    ellipse(this.xPos, this.yPos, 30, 30);
-    //rect(this.xPos-5, this.yPos +10, 50, 50);
+    float charScale = 1.5f;
+    noStroke();
+
+    fill(83, 125, 93); // Alien green color
+
+
+    //Head
+    ellipse(this.xPos, this.yPos, 30 * charScale, 35 * charScale);
+
+    //Body
+    ellipse(this.xPos, this.yPos + 30 * charScale, 20 * charScale, 30 * charScale);
+
+    //Eyes 
+    fill(210, 208, 160);
+    ellipse(this.xPos - 8 * charScale, this.yPos - 5 * charScale, 8 * charScale, 12 * charScale); // Left eye
+    ellipse(this.xPos + 8 * charScale, this.yPos - 5 * charScale, 8 * charScale, 12 * charScale); // Right eye
+
+    //Antenna
+    stroke(115, 148, 107);
+    strokeWeight(2 * charScale);
+    line(this.xPos - 10 * charScale, this.yPos - 20 * charScale, this.xPos - 15 * charScale, this.yPos - 40 * charScale); // Left antenna
+    line(this.xPos + 10 * charScale, this.yPos - 20 * charScale, this.xPos + 15 * charScale, this.yPos - 40 * charScale); // Right antenna
+    circle(this.xPos - 15 * charScale, this.yPos - 40 * charScale, 5 * charScale); // Left antenna tip
+    circle(this.xPos + 15 * charScale, this.yPos - 40 * charScale, 5 * charScale); // Right antenna tip
+
+    //toes
+    noStroke();
     fill(0, 0, 0);
-    //eyes
-    ellipse(this.xPos - 5, this.yPos - 5, 5, 5);
-    ellipse(this.xPos + 5, this.yPos - 5, 5, 5);
+    ellipse(this.xPos - 5 * charScale, this.yPos + 45 * charScale, 10 * charScale, 8 * charScale); // Left foot
+    ellipse(this.xPos + 5 * charScale, this.yPos + 45 * charScale, 10 * charScale, 8 * charScale); // Right foot
+
+    // mouth and teeth
+    fill(0, 0, 0);
+    arc(this.xPos, this.yPos + 10 * charScale, 20 * charScale, 10 * charScale, 0, PI); // Mouth
+    fill(255, 255, 255);
+    triangle(this.xPos-5*charScale, this.yPos + 10 * charScale, this.xPos - 7 * charScale, this.yPos + 10 * charScale, this.xPos - 6 * charScale, this . yPos + 15 * charScale); // Left tooth
+    triangle(this.xPos+5*charScale, this.yPos + 10 * charScale, this.xPos + 7 * charScale, this.yPos + 10 * charScale, this.xPos + 6 * charScale, this . yPos + 15 * charScale); // Right tooth
+    
   }
 
   protected float applyGravity(float y) {
