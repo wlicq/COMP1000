@@ -1,6 +1,8 @@
 public class Character {
   float xPos, yPos, floorPos;
   float gravity = 1.85f;
+  float charScale = 1.5f;
+
   boolean isMoving = false;
 
   float maxSpeed = 1;
@@ -10,7 +12,7 @@ public class Character {
 
   float jumpHeight = 200;
   float jumpSpeed = 6.5f;
- 
+
 
   String playerState = "idle";
 
@@ -23,18 +25,21 @@ public class Character {
   }
 
   void update(boolean moveLeft, boolean moveRight, boolean jump) {
-    if(!jump) this.yPos = applyGravity(this.yPos);
+    if (!jump) this.yPos = applyGravity(this.yPos);
     if (jump) this.yPos = charJump(this.yPos);
 
     if (moveLeft) playerState = "moveLeft";
-    if (moveRight) playerState = "moveRight";   
+    if (moveRight) playerState = "moveRight";
     if (!moveLeft && !moveRight && !jump) playerState = "idle";
-    
+
+    float playerBoundary = 15 * charScale;
+
 
     switch(playerState) {
     case "moveLeft":
+      speed = 0;
       while (speed < maxSpeed) {
-        if (this.xPos < 0) this.xPos = 0;
+        if (this.xPos < playerBoundary) this.xPos = playerBoundary;
         speed += acceleration;
         this.xPos -= speed;
       }
@@ -42,11 +47,11 @@ public class Character {
       speed = 0;
       break;
     case "moveRight":
+      speed = 0;
       while (speed < maxSpeed) {
-        if (this.xPos > width) this.xPos = width;
+        if (this.xPos > width-playerBoundary) this.xPos = width-playerBoundary;
         speed += acceleration;
         this.xPos += speed;
-        
       }
       displayPlayer();
       speed = 0;
@@ -62,8 +67,7 @@ public class Character {
     }
   }
   protected void displayPlayer() {
-
-    float charScale = 1.5f;
+    
     noStroke();
 
     fill(83, 125, 93); // Alien green color
@@ -75,7 +79,7 @@ public class Character {
     //Body
     ellipse(this.xPos, this.yPos + 30 * charScale, 20 * charScale, 30 * charScale);
 
-    //Eyes 
+    //Eyes
     fill(210, 208, 160);
     ellipse(this.xPos - 8 * charScale, this.yPos - 5 * charScale, 8 * charScale, 12 * charScale); // Left eye
     ellipse(this.xPos + 8 * charScale, this.yPos - 5 * charScale, 8 * charScale, 12 * charScale); // Right eye
@@ -94,13 +98,18 @@ public class Character {
     ellipse(this.xPos - 5 * charScale, this.yPos + 45 * charScale, 10 * charScale, 8 * charScale); // Left foot
     ellipse(this.xPos + 5 * charScale, this.yPos + 45 * charScale, 10 * charScale, 8 * charScale); // Right foot
 
-    // mouth and teeth
+    //mouth and teeth
     fill(0, 0, 0);
     arc(this.xPos, this.yPos + 10 * charScale, 20 * charScale, 10 * charScale, 0, PI); // Mouth
     fill(255, 255, 255);
-    triangle(this.xPos-5*charScale, this.yPos + 10 * charScale, this.xPos - 7 * charScale, this.yPos + 10 * charScale, this.xPos - 6 * charScale, this . yPos + 15 * charScale); // Left tooth
-    triangle(this.xPos+5*charScale, this.yPos + 10 * charScale, this.xPos + 7 * charScale, this.yPos + 10 * charScale, this.xPos + 6 * charScale, this . yPos + 15 * charScale); // Right tooth
-    
+
+    float toothX1Default = this.xPos-5*charScale;
+    float toothX2Default = this.xPos-7*charScale;
+    float toothX3Default = this.xPos-6*charScale;
+    float toothY1Default = this.yPos + 10 * charScale;
+    float toothY2Default = this.yPos + 15 * charScale;
+
+    for (int i = 0; i<7; i++) triangle(toothX1Default+(3*i), toothY1Default, toothX2Default+(3*i), toothY1Default, toothX3Default+(3*i), toothY2Default); // Left tooth
   }
 
   protected float applyGravity(float y) {
@@ -111,12 +120,12 @@ public class Character {
     }
     return y + gravity;
   }
-    protected float charJump(float y) {
-       if(y > jumpHeight) {
-         y -= jumpSpeed;
-       } else{
-        jump = false;
-       }
-       return y;
+  protected float charJump(float y) {
+    if (y > jumpHeight) {
+      y -= jumpSpeed;
+    } else {
+      jump = false;
     }
+    return y;
+  }
 }
