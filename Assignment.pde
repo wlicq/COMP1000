@@ -1,3 +1,17 @@
+/*
+COMP1000 Assignment
+Game Name: Aliens Love Cookies
+Name: Will Licquorice
+Student ID: 47664762
+
+Controls:
+- A: Move left
+- D: Move right
+- W: Jump (hold to jump higher)
+*/
+
+
+
 float floorPos, charY, charX;
 
 float charSpeedX = 0;
@@ -29,7 +43,6 @@ void setup() {
   titleFont = createFont("Arial",16,true);
   background = new Background();
   background.updateBackground();
-  //drawBackground();
   surface.setResizable(true);
   fill(0);
 
@@ -37,7 +50,6 @@ void setup() {
   charY = height / 2;
   
   floorPos = height - (height/5);
- 
 
   character = new Character(charX, charY, floorPos, setJumpHeight);
   
@@ -46,39 +58,36 @@ void setup() {
 }
 
 void drawStars() {
-  for (int i = 0; i < stars.length; i++) {
-    if (stars[i] == null) stars[i] = new Star(random(0, width), random(height/8, height - (height / 8)));
-    stars[i].drawStar();
+  for (int starNum = 0; starNum < stars.length; starNum++) {
+    if (stars[starNum] == null) stars[starNum] = new Star(random(0, width), random(height/8, height - (height / 8)));
+    stars[starNum].drawStar();
   }
 }
-
 
 void updateRockets() {
-  for (int i = 0; i < rockets.length; i++) {
-    if (rockets[i] == null) {
-      rockets[i] = new Rocket(random(0, width), height);
+  for (int rktNum = 0; rktNum < rockets.length; rktNum++) {
+    if (rockets[rktNum] == null) {
+      rockets[rktNum] = new Rocket(random(0, width), height);
     }
-    rockets[i].drawRocket();
-    if (rockets[i].yPos <= 0) {
-      rockets[i] = null;
+    rockets[rktNum].drawRocket();
+    if (rockets[rktNum].yPos <= 0) {
+      rockets[rktNum] = null;
     }
   }
-  //    println(rockets[0].yPos);
 }
+
 void updateCookies() {
-  for (int i = 0; i < cookies.length; i++) {
-    if (cookies[i] == null) cookies[i] = new Cookie(random(0, width), random((height/8)+100, floorPos));
+  for (int cookieNum = 0; cookieNum < cookies.length; cookieNum++) {
+    if (cookies[cookieNum] == null) cookies[cookieNum] = new Cookie(random(0, width), random((height/8)+100, floorPos));
     
-    cookies[i].drawCookie();
-    if (cookies[i].collected) {
-      cookies[i] = null;
+    cookies[cookieNum].drawCookie();
+    if (cookies[cookieNum].collected) {
+      cookies[cookieNum] = null;
       println("Cookie collected");
       playerScore++;
     }
   }
-  //    println(cookies[0].yPos);
 }
-
 
 void keyPressed() {
   switch (key) {
@@ -96,6 +105,7 @@ void keyPressed() {
     break;
   }
 }
+
 void keyReleased() {
   switch (key) {
   case 'a':
@@ -109,6 +119,7 @@ void keyReleased() {
     break;
   }
 }
+
 
 void draw() {
   background.updateBackground();

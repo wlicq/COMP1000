@@ -34,7 +34,6 @@ public class Character {
 
     float playerBoundary = 15 * charScale;
 
-
     switch(playerState) {
     case "moveLeft":
       speed = 0;
@@ -67,7 +66,7 @@ public class Character {
     }
   }
   protected void displayPlayer() {
-    
+
     noStroke();
 
     fill(83, 125, 93); // Alien green color
