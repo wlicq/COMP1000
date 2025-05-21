@@ -1,8 +1,17 @@
 /*
 COMP1000 Assignment
 Game Name: Aliens Love Cookies
-Name: Will Licquorice
+Name: William Licquorice
 Student ID: 47664762
+
+Aim of Game: Dodge the rockets and collect the cookies to gain points
+Game Description and Tips:
+The alien must eat cookies but is being hunted by rockets, try to get as
+many cookies as you can, note. game is scalable to screen size so to make
+it easier to dodge rockets make the screen bigger. collisions also only 
+happen with ther aliens head because he eats cookies with his mouth and
+the makes it easier to dodge rockets when they spawn at the bottom of the screen
+
 
 Controls:
 - A: Move left
@@ -19,18 +28,17 @@ float charSpeedY = 2;
 float setJumpHeight = 200;
 float bounceFactor = 0.7;
 
-Character character;
-
 boolean moveLeft = false;
 boolean moveRight = false;
 boolean jump = false;
 boolean canJump = false;
+boolean gameOver = false;
 
-
-Rocket[] rockets = new Rocket[10];
+Rocket[] rockets = new Rocket[5];
 Cookie[] cookies = new Cookie[10];
 Star[] stars = new Star[20];
 
+Character character;
 Background background;
 
 PFont titleFont;
@@ -38,8 +46,15 @@ PFont titleFont;
 int playerScore = 0;
 int playerLives = 3;
 
+int currentScreenWidth, currentScreenHeight;
+
+
 void setup() {
   size(1000, 1000);
+
+  currentScreenHeight = height;
+  currentScreenWidth = width;
+
   titleFont = createFont("Arial",16,true);
   background = new Background();
   background.updateBackground();
@@ -58,32 +73,50 @@ void setup() {
 }
 
 void drawStars() {
-  for (int starNum = 0; starNum < stars.length; starNum++) {
-    if (stars[starNum] == null) stars[starNum] = new Star(random(0, width), random(height/8, height - (height / 8)));
-    stars[starNum].drawStar();
+  if(currentScreenHeight != height || currentScreenWidth != width) {
+    for (int starIndex = 0; starIndex < stars.length; starIndex++) {
+      stars[starIndex] = null;
+    }
+    currentScreenHeight = height;
+    currentScreenWidth = width;
+  }
+  for (int starIndex = 0; starIndex < stars.length; starIndex++) {
+    if (stars[starIndex] == null) stars[starIndex] = new Star(random(0, width), random(height/8, height - (height / 8)));
+    stars[starIndex].drawStar();
   }
 }
 
 void updateRockets() {
-  for (int rktNum = 0; rktNum < rockets.length; rktNum++) {
-    if (rockets[rktNum] == null) {
-      rockets[rktNum] = new Rocket(random(0, width), height);
+  for (int rocketIndex = 0; rocketIndex < rockets.length; rocketIndex++) {
+    if (rockets[rocketIndex] == null) {
+      rockets[rocketIndex] = new Rocket(random(0, width), height);
     }
-    rockets[rktNum].drawRocket();
-    if (rockets[rktNum].yPos <= 0) {
-      rockets[rktNum] = null;
+    //If game is over resets the rockets
+    if(dist(rockets[rocketIndex].xPos, rockets[rocketIndex].yPos, charX, charY) < 30){
+      gameOver = true;
+      for (int rocketResetIndex = 0; rocketResetIndex < rockets.length; rocketResetIndex++) {
+        rockets[rocketResetIndex] = null;
+        rockets[rocketResetIndex] = new Rocket(random(0, width), height);
+      }
     }
+    //If rocket is off the screen then reset it
+    rockets[rocketIndex].drawRocket();
+    if (rockets[rocketIndex].yPos <= 0) {
+      rockets[rocketIndex] = null;
+    }
+
   }
 }
 
 void updateCookies() {
-  for (int cookieNum = 0; cookieNum < cookies.length; cookieNum++) {
-    if (cookies[cookieNum] == null) cookies[cookieNum] = new Cookie(random(0, width), random((height/8)+100, floorPos));
-    
-    cookies[cookieNum].drawCookie();
-    if (cookies[cookieNum].collected) {
-      cookies[cookieNum] = null;
-      println("Cookie collected");
+  for (int cookieIndex = 0; cookieIndex < cookies.length; cookieIndex++) {
+    if (cookies[cookieIndex] == null) cookies[cookieIndex] = new Cookie(random(0, width), random((height/8)+100, floorPos));
+
+    cookies[cookieIndex].drawCookie();
+
+    //If cookie collided with the character reset and add to score
+    if (cookies[cookieIndex].collected) {
+      cookies[cookieIndex] = null;
       playerScore++;
     }
   }
@@ -100,9 +133,12 @@ void keyPressed() {
   case 'w':
     if (charY >= floorPos - 10) jump = true;
     println(charY, floorPos);
-
-
     break;
+  case 'r':
+    if(gameOver){
+      gameOver = false;
+      playerScore = 0;
+    }
   }
 }
 
@@ -122,16 +158,28 @@ void keyReleased() {
 
 
 void draw() {
-  background.updateBackground();
-  character.xPos = charX;
-  character.yPos = charY;
+  if(!gameOver){
+    background.updateBackground();
+    character.xPos = charX;
+    character.yPos = charY;
 
-  character.update(moveLeft, moveRight, jump);
+    character.update(moveLeft, moveRight, jump);
 
-  charX = character.xPos;
-  charY = character.yPos;
+    charX = character.xPos;
+    charY = character.yPos;
 
-  character.floorPos = floorPos;
+    character.floorPos = floorPos;
+  }
+  else GameOver();
 }
 
+void GameOver(){
+  background(0);
+  fill(255);
+  textAlign(CENTER);
+  textFont(titleFont, 32);
+  text("Game Over", width / 2, height / 2);
+  text("Score: " + playerScore, width / 2, height / 2 + 50);
+  text("Press R to restart", width / 2, height / 2 + 100);
+}
 

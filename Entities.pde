@@ -32,8 +32,6 @@ public class Cookie {
     float distance = distanceToCharacter(charX, charY);
 
     if(distance < (30*cookieScale)) collected = true;
-
-    
   }
   
   protected float distanceToCharacter(float x, float y) {
@@ -56,14 +54,17 @@ public class Rocket {
     this.speed = random(1, 3);
   }
   void drawRocket() {
+    beginShape();
     fill(0, 0, 0);
     triangle(this.xPos, this.yPos, this.xPos - 20, this.yPos + 30, this.xPos + 20, this.yPos + 30);
     rect(this.xPos-20, this.yPos + 29, 40, 40 * this.rocketScale);
     fill(230, 230, 230);
     rect(this.xPos-5, this.yPos + 20, 5, 5);
+    endShape();
+    
     stroke(100);
 
-    for (int i = 0; i < flameDensity; i++) {
+    for (int flameDensityIndex = 0; flameDensityIndex < flameDensity; flameDensityIndex++) {
       stroke(168, 121, 50);
       line(this.xPos, this.yPos + 40, this.xPos - 19 + random(-20, 20), this.yPos + 90 * this.rocketScale + random(-20, 20));
       line(this.xPos, this.yPos + 40, this.xPos + 19 + random(-20, 20), this.yPos + 90 * this.rocketScale + random(-20, 20));

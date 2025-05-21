@@ -13,9 +13,7 @@ public class Character {
   float jumpHeight = 200;
   float jumpSpeed = 6.5f;
 
-
   String playerState = "idle";
-
 
   public Character(float x, float y, float floor, float setJumpHeight) {
     this.xPos = x;
